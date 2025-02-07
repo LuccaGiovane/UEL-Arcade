@@ -2,11 +2,7 @@
 #define PLAYER_H
 
 #include <GL/freeglut.h>
-
-struct Vector3 {
-    float x, y, z;
-    Vector3(float x = 0, float y = 0, float z = 0) : x(x), y(y), z(z) {}
-};
+#include "vector3.h" // Inclui a definição de Vector3
 
 extern Vector3 playerPos;
 extern Vector3 playerDir;
@@ -16,7 +12,7 @@ void movePlayer();
 void mouse(int x, int y);
 void keyboard(unsigned char key, int x, int y);
 void keyboardUp(unsigned char key, int x, int y);
-void mouseButton(int button, int state, int x, int y); // Declaração adicionada
-void update(int value); // Declaração adicionada
+void mouseButton(int button, int state, int x, int y);
+void update(int value);
 
 #endif

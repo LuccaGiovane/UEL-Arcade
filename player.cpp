@@ -1,6 +1,7 @@
 #include "player.h"
 #include "map.h"
 #include "enemy.h"
+#include "vector3.h"
 #include <cmath>
 #include <GL/glut.h>
 

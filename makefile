@@ -11,7 +11,7 @@ LDFLAGS = -lfreeglut -lopengl32 -lglu32
 SRCS = main.cpp player.cpp enemy.cpp map.cpp
 
 # Nome do executável
-TARGET = doom_game.exe
+TARGET = doom.exe
 
 # Regra principal
 all: $(TARGET)

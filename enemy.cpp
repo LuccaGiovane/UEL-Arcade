@@ -2,6 +2,7 @@
 #include "player.h"
 #include "map.h"
 #include "vector3.h"
+#include "game.h"
 #include <cmath>
 #include <cstdlib>
 #include <vector>
@@ -47,50 +48,52 @@ void drawMonsters() {
 }
 
 void updateMonsters(int value) {
+    if (gameOver) {
+        glutTimerFunc(16, updateMonsters, 0);
+        return;
+    }
+    
     for (auto& m : monsters) {
         if (!m.active) continue;
-
-        // Atualiza a posição do monstro em direção ao jogador (já existente)
+        
+        // Atualiza a posição do monstro em direção ao jogador
         Vector3 dir = Vector3(playerPos.x - m.position.x, 0, playerPos.z - m.position.z);
         float len = std::sqrt(dir.x * dir.x + dir.z * dir.z);
         if (len > 0) {
             dir.x /= len;
             dir.z /= len;
         }
-        float speed = 0.05f; // Velocidade padrão
+        float speed = 0.05f;
         if (m.type == MONSTER_FAST)
             speed = 0.1f;
         else if (m.type == MONSTER_STRONG)
             speed = 0.02f;
         m.position.x += dir.x * speed;
         m.position.z += dir.z * speed;
-
-        // Verifica colisões com as paredes
+        
         if (checkCollision(m.position)) {
             m.position.x -= dir.x * speed;
             m.position.z -= dir.z * speed;
         }
-
-        // Verifica se o monstro colidiu com o jogador (defina um limiar apropriado, ex: 0.5f)
+        
+        // Verifica colisão com o jogador
         float dx = m.position.x - playerPos.x;
         float dz = m.position.z - playerPos.z;
         float distToPlayer = std::sqrt(dx * dx + dz * dz);
-        const float collisionThreshold = 0.5f;  // Ajuste conforme necessário
+        const float collisionThreshold = 0.5f;
         if (distToPlayer < collisionThreshold) {
-            // Aplica dano ao jogador conforme o tipo do monstro
             if (m.type == MONSTER_BASIC)
                 playerHP -= 10;
             else if (m.type == MONSTER_FAST)
                 playerHP -= 20;
             else if (m.type == MONSTER_STRONG)
                 playerHP -= 30;
-
-            m.active = false; // O monstro "consome" sua colisão
+            
+            m.active = false;
         }
     }
     glutTimerFunc(16, updateMonsters, 0);
 }
-
 
 
 void spawnMonster(int value) {

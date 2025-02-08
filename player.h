@@ -7,6 +7,8 @@
 extern Vector3 playerPos;
 extern Vector3 playerDir;
 extern bool keyPressed[256];
+extern int playerHP;
+extern int playerScore;
 
 void movePlayer();
 void mouse(int x, int y);

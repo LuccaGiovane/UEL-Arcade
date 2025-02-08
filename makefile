@@ -8,7 +8,7 @@ CXXFLAGS = -std=c++17 -Wall -O2 -I.
 LDFLAGS = -lfreeglut -lopengl32 -lglu32
 
 # Arquivos fonte
-SRCS = main.cpp player.cpp enemy.cpp map.cpp
+SRCS = main.cpp player.cpp enemy.cpp map.cpp game.cpp
 
 # Nome do executável
 TARGET = doom.exe

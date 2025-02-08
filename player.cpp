@@ -2,14 +2,19 @@
 #include "map.h"
 #include "enemy.h"
 #include "vector3.h"
+#include "game.h"
 #include <cmath>
 #include <GL/glut.h>
 
 const float PLAYER_SPEED = 0.1f;
 const float MOUSE_SENSITIVITY = 0.002f;
+int playerHP = 100;
+int playerScore = 0;
+
 
 Vector3 playerPos(ROOM_SIZE / 2, 0, ROOM_SIZE / 2);
 Vector3 playerDir(0, 0, -1);
+
 bool keyPressed[256] = { false };
 
 void movePlayer() {
@@ -59,6 +64,16 @@ void mouse(int x, int y) {
 
 // Se a tecla pressionada for espaço, dispara; caso contrário, registra o estado para movimentação.
 void keyboard(unsigned char key, int x, int y) {
+    if (gameOver) {
+        // Se o jogo acabou, tratamos as teclas para reiniciar ou sair
+        if (key == 13) { // 13 é o código ASCII para ENTER
+            resetGame();
+        } else if (key == 'q' || key == 'Q') {
+            exit(0);
+        }
+        return;
+    }
+
     if (key == ' ') {
         shoot();  // Dispara utilizando o range definido em enemy.cpp
     } else {
@@ -70,15 +85,24 @@ void keyboardUp(unsigned char key, int x, int y) {
     keyPressed[key] = false;
 }
 
+#include <cstring> // Para strlen
+
 void mouseButton(int button, int state, int x, int y) {
-    // Se preferir, pode manter o disparo com o mouse; agora está desativado.
-    // if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-    //     shoot();
-    // }
+    // Se necessário, trate outros cliques aqui.
+    // Agora o reinício do jogo será feito via teclado (ENTER e 'q' no game over).
 }
 
+
+
 void update(int value) {
-    movePlayer();
+    if (!gameOver) {
+        movePlayer();
+        // Se o HP zerar, interrompa a atualização normal:
+        if (playerHP <= 0) {
+            gameOver = true;
+        }
+    }
     glutPostRedisplay();
     glutTimerFunc(16, update, 0);
 }
+

@@ -2,6 +2,7 @@
 #include "player.h"
 #include "map.h"
 #include "vector3.h"
+#include "game.h"
 #include <cmath>
 #include <cstdlib>
 #include <vector>
@@ -47,38 +48,53 @@ void drawMonsters() {
 }
 
 void updateMonsters(int value) {
+    if (gameOver) {
+        glutTimerFunc(16, updateMonsters, 0);
+        return;
+    }
+    
     for (auto& m : monsters) {
         if (!m.active) continue;
-
-        // Calcula a direção do inimigo para o jogador
+        
+        // Atualiza a posição do monstro em direção ao jogador
         Vector3 dir = Vector3(playerPos.x - m.position.x, 0, playerPos.z - m.position.z);
         float len = std::sqrt(dir.x * dir.x + dir.z * dir.z);
-
         if (len > 0) {
             dir.x /= len;
             dir.z /= len;
         }
-
-        // Velocidade baseada no tipo de inimigo
-        float speed = 0.05f; // Velocidade padrão
-        if (m.type == MONSTER_FAST) {
-            speed = 0.1f; // Mais rápido
-        } else if (m.type == MONSTER_STRONG) {
-            speed = 0.02f; // Mais lento
-        }
-
-        // Atualiza a posição do inimigo
+        float speed = 0.05f;
+        if (m.type == MONSTER_FAST)
+            speed = 0.1f;
+        else if (m.type == MONSTER_STRONG)
+            speed = 0.02f;
         m.position.x += dir.x * speed;
         m.position.z += dir.z * speed;
-
-        // Verifica colisões com as paredes
+        
         if (checkCollision(m.position)) {
-            m.position.x -= dir.x * speed; // Desfaz o movimento
+            m.position.x -= dir.x * speed;
             m.position.z -= dir.z * speed;
+        }
+        
+        // Verifica colisão com o jogador
+        float dx = m.position.x - playerPos.x;
+        float dz = m.position.z - playerPos.z;
+        float distToPlayer = std::sqrt(dx * dx + dz * dz);
+        const float collisionThreshold = 0.5f;
+        if (distToPlayer < collisionThreshold) {
+            if (m.type == MONSTER_BASIC)
+                playerHP -= 10;
+            else if (m.type == MONSTER_FAST)
+                playerHP -= 20;
+            else if (m.type == MONSTER_STRONG)
+                playerHP -= 30;
+            
+            m.active = false;
         }
     }
     glutTimerFunc(16, updateMonsters, 0);
 }
+
 
 void spawnMonster(int value) {
     Monster m;
@@ -93,9 +109,9 @@ void spawnMonster(int value) {
     if (monsterType == MONSTER_BASIC) { // Básico
         m.health = 1;
     } else if (monsterType == MONSTER_FAST) { // Rápido
-        m.health = 1;
+        m.health = 2;
     } else if (monsterType == MONSTER_STRONG) { // Forte
-        m.health = 3;
+        m.health = 4;
     }
 
     monsters.push_back(m);
@@ -103,17 +119,17 @@ void spawnMonster(int value) {
 }
 
 void shoot() {
-    const float SHOOT_RANGE = 10.0f;   // Range máximo para o tiro
-    const float ANGLE_TOLERANCE = 0.2f;  // Tolerância angular em radianos
+    const float SHOOT_RANGE = 10.0f;      // Alcance máximo do tiro
+    const float ANGLE_TOLERANCE = 0.2f;     // Tolerância angular (radianos)
 
     for (auto& m : monsters) {
         if (!m.active) continue;
 
-        // Calcula o vetor do jogador até o inimigo
+        // Calcula o vetor do jogador até o monstro
         Vector3 toEnemy(m.position.x - playerPos.x, m.position.y - playerPos.y, m.position.z - playerPos.z);
         float distance = vectorLength(toEnemy);
 
-        // Verifica se o inimigo está dentro do range
+        // Se estiver fora do alcance, ignora
         if (distance > SHOOT_RANGE)
             continue;
 
@@ -121,9 +137,17 @@ void shoot() {
 
         // Verifica se o inimigo está dentro do cone da mira
         if (dotProduct(playerDir, toEnemyNorm) > std::cos(ANGLE_TOLERANCE)) {
-            m.health--; // Reduz a vida do inimigo
+            m.health--;  // Reduz a "vida" do monstro
+
+            // Se o monstro morreu, incrementa a pontuação conforme o tipo
             if (m.health <= 0) {
-                m.active = false; // Inimigo morre
+                m.active = false;
+                if (m.type == MONSTER_BASIC)
+                    playerScore += 10;   // Básico: 10 pontos
+                else if (m.type == MONSTER_FAST)
+                    playerScore += 25;   // Rápido: 25 pontos
+                else if (m.type == MONSTER_STRONG)
+                    playerScore += 50;   // Forte: 50 pontos
             }
         }
     }

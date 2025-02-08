@@ -7,6 +7,9 @@
 
 const float PLAYER_SPEED = 0.1f;
 const float MOUSE_SENSITIVITY = 0.002f;
+int playerHP = 100;
+int playerScore = 0;
+
 
 Vector3 playerPos(ROOM_SIZE / 2, 0, ROOM_SIZE / 2);
 Vector3 playerDir(0, 0, -1);

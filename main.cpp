@@ -33,6 +33,43 @@ void drawCrosshair() {
     glEnable(GL_DEPTH_TEST);
 }
 
+#include <cstdio>  // Para sprintf
+
+void drawHUD() {
+    // Configura a projeção 2D
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    gluOrtho2D(0, 800, 0, 600);
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+
+    glColor3f(1, 1, 1);  // Cor branca para o texto
+
+    // Mostra o HP
+    char hudText[50];
+    sprintf(hudText, "HP: %d", playerHP);
+    glRasterPos2i(10, 580);  // Posição (10,580)
+    for (char* c = hudText; *c != '\0'; c++) {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+    }
+
+    // Mostra a Pontuação
+    sprintf(hudText, "Score: %d", playerScore);
+    glRasterPos2i(10, 560);  // Abaixo do HP
+    for (char* c = hudText; *c != '\0'; c++) {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+    }
+
+    // Restaura as matrizes
+    glPopMatrix();
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+}
+
+
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
@@ -42,6 +79,9 @@ void display() {
     drawRoom();
     drawMonsters();
     drawCrosshair();
+
+    drawHUD();
+    
     glutSwapBuffers();
 }
 

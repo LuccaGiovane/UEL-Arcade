@@ -1,27 +1,13 @@
-# Compilador
-CXX = g++
+CC      = g++
+CFLAGS  = -Wall -O2
+LDFLAGS = -lfreeglut -lglu32 -lopengl32
+TARGET  = doom.exe
+SOURCES = enemy.cpp player.cpp map.cpp menu.cpp main.cpp
 
-# Flags do compilador
-CXXFLAGS = -std=c++17 -Wall -O2 -I.
-
-# Bibliotecas
-LDFLAGS = -lfreeglut -lopengl32 -lglu32
-
-# Arquivos fonte
-SRCS = main.cpp player.cpp enemy.cpp map.cpp game.cpp
-
-# Nome do executável
-TARGET = doom.exe
-
-# Regra principal
 all: $(TARGET)
 
-# Linkagem dos arquivos objeto
-$(TARGET): $(SRCS)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SRCS) $(LDFLAGS)
+$(TARGET):
+	$(CC) $(CFLAGS) $(SOURCES) -o $(TARGET) $(LDFLAGS)
 
-# Limpeza dos arquivos gerados
 clean:
-	del $(TARGET)
-
-.PHONY: all clean
+	del /Q $(TARGET)

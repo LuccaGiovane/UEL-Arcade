@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(800, 600);
-    glutCreateWindow("Mini DOOM");
+    glutCreateWindow("Pew-Pew");
     
     glEnable(GL_DEPTH_TEST);
     glMatrixMode(GL_PROJECTION);
@@ -59,6 +59,8 @@ int main(int argc, char** argv) {
     glutKeyboardFunc(keyboard);
     glutKeyboardUpFunc(keyboardUp);
     glutPassiveMotionFunc(mouse);
+
+    glutMouseFunc(mouseClick);
     
     // Registra os timers para atualização do jogador, inimigos e cena
     glutTimerFunc(16, update, 0);             // update() definida em player.cpp

@@ -1,7 +1,7 @@
 CC      = g++
 CFLAGS  = -Wall -O2
 LDFLAGS = -lfreeglut -lglu32 -lopengl32
-TARGET  = doom.exe
+TARGET  = pewpew.exe
 SOURCES = enemy.cpp player.cpp map.cpp menu.cpp main.cpp
 
 all: $(TARGET)

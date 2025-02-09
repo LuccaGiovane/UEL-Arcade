@@ -1,12 +1,12 @@
 CC      = g++
 CFLAGS  = -Wall -O2
 LDFLAGS = -lfreeglut -lglu32 -lopengl32
-TARGET  = doom.exe
+TARGET  = doom
 SOURCES = enemy.cpp player.cpp map.cpp menu.cpp main.cpp
 
-all: $(TARGET)
+#all: $(TARGET)
 
-$(TARGET):
+$(TARGET): $(SOURCES)
 	$(CC) $(CFLAGS) $(SOURCES) -o $(TARGET) $(LDFLAGS)
 
 clean:

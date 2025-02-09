@@ -4,7 +4,7 @@
 #include <cmath>
 
 // Constantes para o jogador
-const float PLAYER_SPEED = 0.1f;
+const float PLAYER_SPEED = 0.05f;
 const float MOUSE_SENSITIVITY = 0.002f;
 
 // Estado inicial do jogo

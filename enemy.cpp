@@ -14,7 +14,7 @@ const int MONSTER_STRONG = 2;
 std::vector<Monster> monsters;
 
 // Constantes específicas para o tiro
-static const float SHOOT_RANGE = 10.0f;
+static const float SHOOT_RANGE = 100.0f;
 static const float ANGLE_TOLERANCE = 0.2f;
 
 void drawMonsters() {

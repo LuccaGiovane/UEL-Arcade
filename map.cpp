@@ -15,7 +15,7 @@ void drawRoom() {
     glEnd();
 
     // Teto
-    glColor3f(0.7f, 0.7f, 0.7f);
+    glColor3f(0.4f, 0.4f, 0.4f);
     glBegin(GL_QUADS);
         glVertex3f(0, ROOM_SIZE, 0);
         glVertex3f(ROOM_SIZE, ROOM_SIZE, 0);

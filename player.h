@@ -1,20 +1,21 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <GL/freeglut.h>
-#include "vector3.h" // Inclui a definição de Vector3
+#include "menu.h"  // Para usar Vetor3D
 
-extern Vector3 playerPos;
-extern Vector3 playerDir;
-extern bool keyPressed[256];
+// Variáveis globais do jogador e estado do jogo
+extern bool gameOver;
 extern int playerHP;
 extern int playerScore;
+extern Vetor3D playerPos;
+extern Vetor3D playerDir;
+extern bool keyPressed[256];
 
+// Funções relacionadas ao jogador
 void movePlayer();
-void mouse(int x, int y);
 void keyboard(unsigned char key, int x, int y);
 void keyboardUp(unsigned char key, int x, int y);
-void mouseButton(int button, int state, int x, int y);
+void mouse(int x, int y);
 void update(int value);
 
 #endif

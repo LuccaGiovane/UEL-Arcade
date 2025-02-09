@@ -1,11 +1,11 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include "player.h"
+#include "menu.h"  // Para usar Vetor3D
 
 extern const int ROOM_SIZE;
 
 void drawRoom();
-bool checkCollision(Vector3 pos);
+bool checkCollision(const Vetor3D &pos);
 
 #endif

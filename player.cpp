@@ -1,48 +1,70 @@
 #include "player.h"
 #include "map.h"
-#include "enemy.h"
-#include "vector3.h"
-#include <cmath>
 #include <GL/glut.h>
+#include <cmath>
 
+// Constantes para o jogador
 const float PLAYER_SPEED = 0.1f;
 const float MOUSE_SENSITIVITY = 0.002f;
 
-Vector3 playerPos(ROOM_SIZE / 2, 0, ROOM_SIZE / 2);
-Vector3 playerDir(0, 0, -1);
+// Estado inicial do jogo
+bool gameOver = false;
+int playerHP = 100;
+int playerScore = 0;
+Vetor3D playerPos(ROOM_SIZE / 2, 0, ROOM_SIZE / 2);  // ROOM_SIZE definido em map.cpp
+Vetor3D playerDir(0, 0, -1);
 bool keyPressed[256] = { false };
 
 void movePlayer() {
-    // Avança com a tecla W
     if (keyPressed['w'] || keyPressed['W']) {
-        Vector3 newPos = playerPos;
+        Vetor3D newPos = playerPos;
         newPos.x += playerDir.x * PLAYER_SPEED;
         newPos.z += playerDir.z * PLAYER_SPEED;
         if (!checkCollision(newPos))
             playerPos = newPos;
     }
-    // Retrocede com a tecla S
     if (keyPressed['s'] || keyPressed['S']) {
-        Vector3 newPos = playerPos;
+        Vetor3D newPos = playerPos;
         newPos.x -= playerDir.x * PLAYER_SPEED;
         newPos.z -= playerDir.z * PLAYER_SPEED;
         if (!checkCollision(newPos))
             playerPos = newPos;
     }
-    // Rotaciona para a esquerda com a tecla A
     if (keyPressed['a'] || keyPressed['A']) {
-        float angle = -PLAYER_SPEED;  // Rotaciona negativamente
+        float angle = -PLAYER_SPEED;
         float oldDirX = playerDir.x;
         playerDir.x = playerDir.x * cos(angle) - playerDir.z * sin(angle);
         playerDir.z = oldDirX * sin(angle) + playerDir.z * cos(angle);
     }
-    // Rotaciona para a direita com a tecla D
     if (keyPressed['d'] || keyPressed['D']) {
-        float angle = PLAYER_SPEED;  // Rotaciona positivamente
+        float angle = PLAYER_SPEED;
         float oldDirX = playerDir.x;
         playerDir.x = playerDir.x * cos(angle) - playerDir.z * sin(angle);
         playerDir.z = oldDirX * sin(angle) + playerDir.z * cos(angle);
     }
+}
+
+void keyboard(unsigned char key, int x, int y) {
+    if (gameOver) {
+        // Em game over, o ENTER reinicia e a tecla Q sai do jogo
+        if (key == 13) { // Código ASCII para ENTER
+            extern void resetGame();
+            resetGame();
+        } else if (key == 'q' || key == 'Q') {
+            exit(0);
+        }
+        return;
+    }
+    if (key == ' ') {
+        extern void shoot();
+        shoot();
+    } else {
+        keyPressed[key] = true;
+    }
+}
+
+void keyboardUp(unsigned char key, int x, int y) {
+    keyPressed[key] = false;
 }
 
 void mouse(int x, int y) {
@@ -53,32 +75,15 @@ void mouse(int x, int y) {
     float oldDirX = playerDir.x;
     playerDir.x = playerDir.x * cos(angle) - playerDir.z * sin(angle);
     playerDir.z = oldDirX * sin(angle) + playerDir.z * cos(angle);
-
     glutWarpPointer(400, 300);
 }
 
-// Se a tecla pressionada for espaço, dispara; caso contrário, registra o estado para movimentação.
-void keyboard(unsigned char key, int x, int y) {
-    if (key == ' ') {
-        shoot();  // Dispara utilizando o range definido em enemy.cpp
-    } else {
-        keyPressed[key] = true;
-    }
-}
-
-void keyboardUp(unsigned char key, int x, int y) {
-    keyPressed[key] = false;
-}
-
-void mouseButton(int button, int state, int x, int y) {
-    // Se preferir, pode manter o disparo com o mouse; agora está desativado.
-    // if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-    //     shoot();
-    // }
-}
-
 void update(int value) {
-    movePlayer();
+    if (!gameOver) {
+        movePlayer();
+        if (playerHP <= 0)
+            gameOver = true;
+    }
     glutPostRedisplay();
     glutTimerFunc(16, update, 0);
 }

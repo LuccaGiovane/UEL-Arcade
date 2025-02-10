@@ -15,8 +15,16 @@ const int MONSTER_BASIC = 0;
 const int MONSTER_FAST = 1;
 const int MONSTER_STRONG = 2;
 
+<<<<<<< HEAD
 // Constantes para o tiro
 static const float SHOOT_RANGE = 10.0f;
+=======
+// Vetor global de inimigos
+std::vector<Monster> monsters;
+
+// Constantes específicas para o tiro
+static const float SHOOT_RANGE = 100.0f;
+>>>>>>> ceebdea528da474363266d3eaffefc2b97fca7be
 static const float ANGLE_TOLERANCE = 0.2f;
 
 void drawMonsters() {

@@ -20,32 +20,53 @@ static const float SHOOT_RANGE = 10.0f;
 static const float ANGLE_TOLERANCE = 0.2f;
 
 void drawMonsters() {
+    // Habilita a iluminação para aplicar emissão de luz
+    glEnable(GL_LIGHTING);
 
     for (auto &m : monsters) {
-        
-        if (!m.active){
+        if (!m.active) {
             continue;
         }
-            
-        // salva o estado atual da matriz de transf pq se nao afetava os outros
+
+        // Salva o estado atual da matriz de transformação
         glPushMatrix();
-        // move a coordenada pra onde o monstro esta, 0.5 pra ele nao ficar no chao
+
+        // Move a coordenada para onde o monstro está, 0.5 para ele não ficar no chão
         glTranslatef(m.position.x, 0.5f, m.position.z);
-        
-        // define a cor dependendo do monstro respectivamente: vermelho, verde, azul
-        if (m.type == MONSTER_BASIC)
-            glColor3f(1, 0, 0);
-        else if (m.type == MONSTER_FAST)
-            glColor3f(0, 1, 0);
-        else if (m.type == MONSTER_STRONG)
-            glColor3f(0, 0, 1);
-        
-        // desenha a esfera
+
+        // Define a cor de emissão dependendo do tipo de monstro
+        GLfloat emissionColor[4];
+        if (m.type == MONSTER_BASIC) {
+            emissionColor[0] = 1.0f; // Vermelho
+            emissionColor[1] = 0.0f;
+            emissionColor[2] = 0.0f;
+        } else if (m.type == MONSTER_FAST) {
+            emissionColor[0] = 0.0f; // Verde
+            emissionColor[1] = 1.0f;
+            emissionColor[2] = 0.0f;
+        } else if (m.type == MONSTER_STRONG) {
+            emissionColor[0] = 0.0f; // Azul
+            emissionColor[1] = 0.0f;
+            emissionColor[2] = 1.0f;
+        }
+        emissionColor[3] = 1.0f; // Componente alfa
+
+        // Define a emissão de luz
+        glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emissionColor);
+
+        // Desenha a esfera
         glutSolidSphere(0.3, 10, 10);
 
-        // restaura a matriz de transf
+        // Restaura a emissão padrão (nenhuma emissão)
+        GLfloat noEmission[] = {0.0f, 0.0f, 0.0f, 1.0f};
+        glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, noEmission);
+
+        // Restaura a matriz de transformação
         glPopMatrix();
     }
+
+    // Desabilita a iluminação após desenhar os monstros
+    glDisable(GL_LIGHTING);
 }
 
 void updateMonsters(int value) {

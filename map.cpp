@@ -4,7 +4,29 @@
 // Tamanho da sala
 const int ROOM_SIZE = 30;
 
+void setupLighting() {
+    // Luz ambiente global bem escura
+    GLfloat globalAmbient[] = {0.2f, 0.2f, 0.2f, 1.0f}; 
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
+
+    // Configuração da fonte de luz pontual
+    GLfloat lightPosition[] = {ROOM_SIZE / 2, ROOM_SIZE / 2, ROOM_SIZE / 2, 1.0f}; // Posição da luz
+    GLfloat lightDiffuse[] = {0.3f, 0.3f, 0.3f, 1.0f}; // Cor difusa da luz (mais fraca)
+    GLfloat lightSpecular[] = {0.1f, 0.1f, 0.1f, 1.0f}; // Cor especular da luz (muito fraca)
+
+    glEnable(GL_LIGHTING); // Habilita iluminação
+    glEnable(GL_LIGHT0);   // Habilita a primeira fonte de luz
+
+    // Define a posição e as propriedades da luz
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpecular);
+}
+
 void drawRoom() {
+    
+    setupLighting();
+
     // Chão
     glColor3f(0.2f, 0.2f, 0.2f);
     glBegin(GL_QUADS);
@@ -58,6 +80,8 @@ void drawRoom() {
         glVertex3f(ROOM_SIZE, ROOM_SIZE, ROOM_SIZE);
         glVertex3f(ROOM_SIZE, ROOM_SIZE, 0);
     glEnd();
+
+    glDisable(GL_LIGHTING);
 }
 
 bool checkCollision(const Vetor3D &pos) {

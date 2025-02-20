@@ -12,11 +12,8 @@ extern Vetor3D playerDir;
 extern bool keyPressed[256];
 
 // Funções relacionadas ao jogador
-void movePlayer();
 void keyboard(unsigned char key, int x, int y);
 void keyboardUp(unsigned char key, int x, int y);
-void mouse(int x, int y);
 void update(int value);
-void mouseClick(int button, int state, int x, int y);
 
 #endif

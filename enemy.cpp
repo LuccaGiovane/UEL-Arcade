@@ -17,15 +17,13 @@ const int MONSTER_STRONG = 2;
 
 // Constantes para o tiro
 static const float SHOOT_RANGE = 10.0f;
-static const float ANGLE_TOLERANCE = 0.2f;
+static const float ANGLE_TOLERANCE = 0.1f;
 
 void drawMonsters() {
 
     for (auto &m : monsters) {
         
-        if (!m.active){
-            continue;
-        }
+        if (!m.active) continue;
             
         // salva o estado atual da matriz de transf pq se nao afetava os outros
         glPushMatrix();
@@ -56,9 +54,8 @@ void updateMonsters(int value) {
     }
     
     for (auto &m : monsters) {
-        if (!m.active){
-            continue;
-        }
+        if (!m.active) continue;
+        
             
         // Calcula a direção do inimigo até o jogador
         Vetor3D dir(playerPos.x - m.position.x, 0, playerPos.z - m.position.z);
@@ -69,12 +66,10 @@ void updateMonsters(int value) {
             dir.z /= len;
         }
 
-        float speed = 0.05f;
-        if (m.type == MONSTER_FAST){
-            speed = 0.1f;
-        }else if (m.type == MONSTER_STRONG){
-            speed = 0.02f;
-        }
+        float speed;
+        if (m.type == MONSTER_FAST) speed = 0.1f;
+        else if (m.type == MONSTER_STRONG) speed = 0.02f;
+        else speed = 0.05f;
         
         m.position.x += dir.x * speed;
         m.position.z += dir.z * speed;
@@ -90,14 +85,10 @@ void updateMonsters(int value) {
         float dist = std::sqrt(dx * dx + dz * dz);
         
         if (dist < 0.5f) {
-            if (m.type == MONSTER_BASIC){
-                playerHP -= 10;
-            }else if (m.type == MONSTER_FAST){
-                playerHP -= 20;
-            }else if (m.type == MONSTER_STRONG){
-                playerHP -= 30;
-            } 
-
+            if (m.type == MONSTER_BASIC)       playerHP -= 20;
+            else if (m.type == MONSTER_FAST)   playerHP -= 10;
+            else if (m.type == MONSTER_STRONG) playerHP -= 40;
+            
             m.active = false;
         }
     }
@@ -111,47 +102,40 @@ void spawnMonster(int value) {
     
     int type = rand() % 3;
     m.type = type;
-    
-    if (type == MONSTER_BASIC){
-        m.health = 1;
-    }else if (type == MONSTER_FAST){
-        m.health = 2;
-    }else if (type == MONSTER_STRONG){
-        m.health = 4;
-    }  
-    
+
+    if (type == MONSTER_BASIC)       m.health = 2; 
+    else if (type == MONSTER_FAST)   m.health = 1;
+    else if (type == MONSTER_STRONG) m.health = 4;
+      
     monsters.push_back(m);
+    
     glutTimerFunc(3000, spawnMonster, 0);
 }
 
 void shoot() {
     for (auto &m : monsters) {
-        if (!m.active){
-            continue;
-        }
+        if (!m.active) continue;
+
         // Calcula o vetor do jogador até o inimigo
         Vetor3D toEnemy(m.position.x - playerPos.x,
                         m.position.y - playerPos.y,
                         m.position.z - playerPos.z);
         
         float distance = vectorLength(toEnemy);
-        if (distance > SHOOT_RANGE){
-            continue;
-        }
-
+        
+        if (distance > SHOOT_RANGE) continue;
+        
         
         Vetor3D normToEnemy = normalize(toEnemy);
         if (dotProduct(playerDir, normToEnemy) > std::cos(ANGLE_TOLERANCE)) {
             m.health--;
             if (m.health <= 0) {
                 m.active = false;
-                if (m.type == MONSTER_BASIC){
-                    playerScore += 10;
-                }else if (m.type == MONSTER_FAST){
-                    playerScore += 25;
-                }else if (m.type == MONSTER_STRONG){
-                    playerScore += 50;
-                }
+
+                if (m.type == MONSTER_BASIC)       playerScore += 10;
+                else if (m.type == MONSTER_FAST)   playerScore += 25;
+                else if (m.type == MONSTER_STRONG) playerScore += 50;
+                
             }
         }
     }

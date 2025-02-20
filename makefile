@@ -4,9 +4,9 @@ LDFLAGS = -lfreeglut -lglu32 -lopengl32
 TARGET  = pewpew.exe
 SOURCES = enemy.cpp player.cpp map.cpp menu.cpp main.cpp
 
-all: $(TARGET)
+#all: $(TARGET)
 
-$(TARGET):
+$(TARGET): $(SOURCES)
 	$(CC) $(CFLAGS) $(SOURCES) -o $(TARGET) $(LDFLAGS)
 
 clean:

@@ -11,7 +11,7 @@ void setupLighting() {
 
     // Configuração da fonte de luz pontual
     GLfloat lightPosition[] = {ROOM_SIZE / 2, ROOM_SIZE / 2, ROOM_SIZE / 2, 1.0f}; // Posição da luz
-    GLfloat lightDiffuse[] = {0.3f, 0.3f, 0.3f, 1.0f}; // Cor difusa da luz (mais fraca)
+    GLfloat lightDiffuse[] = {0.5f, 0.5f, 0.5f, 1.0f}; // Cor difusa da luz (mais fraca)
     GLfloat lightSpecular[] = {0.1f, 0.1f, 0.1f, 1.0f}; // Cor especular da luz (muito fraca)
 
     glEnable(GL_LIGHTING); // Habilita iluminação
@@ -81,7 +81,7 @@ void drawRoom() {
         glVertex3f(ROOM_SIZE, ROOM_SIZE, 0);
     glEnd();
 
-    glDisable(GL_LIGHTING);
+    
 }
 
 bool checkCollision(const Vetor3D &pos) {

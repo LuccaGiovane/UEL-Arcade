@@ -17,6 +17,7 @@ void display() {
                   playerPos.x + playerDir.x, playerPos.y + 0.5 + playerDir.y, playerPos.z + playerDir.z,
                   0, 1, 0);
         drawRoom();
+        glDisable(GL_LIGHTING);
         drawMonsters();
         drawCrosshair();
         drawHUD();
@@ -55,17 +56,17 @@ int main(int argc, char** argv) {
     
     resetGame();
     
+    for (int i = 0; i < 256; i++) keyPressed[i]=false;
+
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
     glutKeyboardUpFunc(keyboardUp);
-    glutPassiveMotionFunc(mouse);
-
-    glutMouseFunc(mouseClick);
+    
     
     // Registra os timers para atualização do jogador, inimigos e cena
     glutTimerFunc(16, update, 0);             // update() definida em player.cpp
     glutTimerFunc(16, updateMonsters, 0);       // updateMonsters() de enemy.cpp
-    glutTimerFunc(3000, spawnMonster, 0);       // spawnMonster() de enemy.cpp
+    // glutTimerFunc(3000, spawnMonster, 0);       // spawnMonster() de enemy.cpp
     glutTimerFunc(16, updateScene, 0);          // Apenas para chamar glutPostRedisplay
     
     glutSetCursor(GLUT_CURSOR_NONE);

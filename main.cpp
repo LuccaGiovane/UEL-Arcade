@@ -73,7 +73,6 @@ int main(int argc, char** argv) {
     // Registra os timers para atualização do jogador, inimigos e cena
     glutTimerFunc(16, update, 0);             // update() definida em player.cpp
     glutTimerFunc(16, updateMonsters, 0);       // updateMonsters() de enemy.cpp
-    // glutTimerFunc(3000, spawnMonster, 0);       // spawnMonster() de enemy.cpp
     glutTimerFunc(16, updateScene, 0);          // Apenas para chamar glutPostRedisplay
     
     glutSetCursor(GLUT_CURSOR_NONE);

@@ -3,7 +3,9 @@
 #include "enemy.h"
 #include <GL/glut.h>
 #include <cmath>
+#include <stdlib.h>
 #include <iostream>
+#include <random>
 
 extern void resetGame();
 
@@ -20,18 +22,20 @@ bool keyPressed[256];
 
 bool shotLight = false;
 
-
 void setupShotLight() {
     if (shotLight) {
-        glEnable(GL_DEPTH_TEST);
+
         glEnable(GL_LIGHT1);
         
-        GLfloat lightPos[] = { playerPos.x, playerPos.y + 0.5f, playerPos.z, 1.0f };
+        GLfloat lightPos[] = { playerPos.x, playerPos.y+0.5f, playerPos.z, 1.0f };
 
-        GLfloat lightColor[] = { 0.5f, 0.5f, 0.35f, 1.0f };
+        GLfloat lightYellow[] = {0.1f, 0.1f, 0.1f, 1.0f};
+        GLfloat black[] = {0.0f, 0.0f, 0.0f, 1.0f};
+
         glLightfv(GL_LIGHT1, GL_POSITION, lightPos);
-        glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColor);
-        glLightfv(GL_LIGHT1, GL_SPECULAR, lightColor);
+        glLightfv(GL_LIGHT1,GL_AMBIENT,black); // brilho da cena - preto nao contribui para a iluminacao
+        glLightfv(GL_LIGHT1,GL_DIFFUSE,lightYellow); //cor de fonte de luz
+        glLightfv(GL_LIGHT1,GL_SPECULAR,lightYellow); // brilhante ou opac
 
     } else {
         glDisable(GL_LIGHT1);

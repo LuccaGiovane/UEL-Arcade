@@ -6,6 +6,8 @@
 #include "map.h"
 #include "menu.h"
 
+
+
 // Função display: se o jogo acabou exibe a tela de game over; caso contrário, desenha a cena
 void display() {
     if (gameOver) {
@@ -13,11 +15,16 @@ void display() {
     } else {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glLoadIdentity();
-        gluLookAt(playerPos.x, playerPos.y + 0.5, playerPos.z,
-                  playerPos.x + playerDir.x, playerPos.y + 0.5 + playerDir.y, playerPos.z + playerDir.z,
+        
+        // Atualiza câmera seguindo o jogador
+        gluLookAt(playerPos.x, playerPos.y + 0.5f, playerPos.z,
+                  playerPos.x + playerDir.x, playerPos.y + 0.5f + playerDir.y, playerPos.z + playerDir.z,
                   0, 1, 0);
+        
+        glEnable(GL_LIGHTING);  // Habilita iluminação
+        setupShotLight();       // Configura a luz do tiro na posição correta
         drawRoom();
-        glDisable(GL_LIGHTING);
+        glDisable(GL_LIGHTING); // Desabilita iluminação para o restante da cena
         drawMonsters();
         drawCrosshair();
         drawHUD();

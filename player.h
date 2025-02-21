@@ -15,5 +15,6 @@ extern bool keyPressed[256];
 void keyboard(unsigned char key, int x, int y);
 void keyboardUp(unsigned char key, int x, int y);
 void update(int value);
+void setupShotLight();
 
 #endif

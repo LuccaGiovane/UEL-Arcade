@@ -10,12 +10,11 @@ void setupLighting() {
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
 
     // Configuração da fonte de luz pontual
-    GLfloat lightPosition[] = {ROOM_SIZE / 2, ROOM_SIZE / 2, ROOM_SIZE / 2, 1.0f}; // Posição da luz
+    GLfloat lightPosition[] = {ROOM_SIZE / 2, ROOM_SIZE, ROOM_SIZE / 2, 1.0f}; // Posição da luz
     GLfloat lightDiffuse[] = {0.5f, 0.5f, 0.5f, 1.0f}; // Cor difusa da luz (mais fraca)
     GLfloat lightSpecular[] = {0.1f, 0.1f, 0.1f, 1.0f}; // Cor especular da luz (muito fraca)
 
-    glEnable(GL_LIGHTING); // Habilita iluminação
-    glEnable(GL_LIGHT0);   // Habilita a primeira fonte de luz
+    glEnable(GL_LIGHT0);
 
     // Define a posição e as propriedades da luz
     glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
@@ -24,7 +23,6 @@ void setupLighting() {
 }
 
 void drawRoom() {
-    
     setupLighting();
 
     // Chão
@@ -36,15 +34,7 @@ void drawRoom() {
         glVertex3f(0, 0, ROOM_SIZE);
     glEnd();
 
-    // Teto
-    glColor3f(0.7f, 0.7f, 0.7f);
-    glBegin(GL_QUADS);
-        glVertex3f(0, ROOM_SIZE, 0);
-        glVertex3f(ROOM_SIZE, ROOM_SIZE, 0);
-        glVertex3f(ROOM_SIZE, ROOM_SIZE, ROOM_SIZE);
-        glVertex3f(0, ROOM_SIZE, ROOM_SIZE);
-    glEnd();
-
+    
     // Parede frontal (z = 0)
     glColor3f(0.6f, 0.6f, 0.6f);
     glBegin(GL_QUADS);
@@ -55,7 +45,7 @@ void drawRoom() {
     glEnd();
 
     // Parede traseira (z = ROOM_SIZE)
-    glColor3f(0.5f, 0.5f, 0.5f);
+    glColor3f(0.6f, 0.6f, 0.6f);
     glBegin(GL_QUADS);
         glVertex3f(0, 0, ROOM_SIZE);
         glVertex3f(ROOM_SIZE, 0, ROOM_SIZE);
@@ -64,7 +54,7 @@ void drawRoom() {
     glEnd();
 
     // Parede esquerda (x = 0)
-    glColor3f(0.4f, 0.4f, 0.4f);
+    glColor3f(0.6f, 0.6f, 0.6f);
     glBegin(GL_QUADS);
         glVertex3f(0, 0, 0);
         glVertex3f(0, 0, ROOM_SIZE);
@@ -73,7 +63,7 @@ void drawRoom() {
     glEnd();
 
     // Parede direita (x = ROOM_SIZE)
-    glColor3f(0.3f, 0.3f, 0.3f);
+    glColor3f(0.6f, 0.6f, 0.6f);
     glBegin(GL_QUADS);
         glVertex3f(ROOM_SIZE, 0, 0);
         glVertex3f(ROOM_SIZE, 0, ROOM_SIZE);

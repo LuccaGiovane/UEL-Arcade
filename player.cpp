@@ -6,21 +6,46 @@
 #include <iostream>
 
 extern void resetGame();
+
 // Constantes para o jogador
 const float PLAYER_SPEED = 0.05f;
-const float MOUSE_SENSITIVITY = 0.002f;
-
-// static float yaw = 0.0f;
-// static float pitch = 0.0f;
-
-
 // Estado inicial do jogo
 bool gameOver = false;
+bool atirando = false;
 int playerHP = 100;
 int playerScore = 0;
 Vetor3D playerPos(ROOM_SIZE / 2, 0, ROOM_SIZE / 2);  // ROOM_SIZE definido em map.cpp
 Vetor3D playerDir(0, 0, -1);
 bool keyPressed[256];
+
+bool shotLight = false;
+
+
+void setupShotLight() {
+    if (shotLight) {
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_LIGHT1);
+
+        glPushMatrix(); // Salva a matriz atual
+        glLoadIdentity(); // Reseta a matriz para evitar transformações indesejadas
+
+        GLfloat lightPos[] = { playerPos.x, playerPos.y + 0.5f, playerPos.z, 1.0f };
+
+        GLfloat lightColor[] = { 0.5f, 0.5f, 0.35f, 1.0f };
+        glLightfv(GL_LIGHT1, GL_POSITION, lightPos);
+        glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColor);
+        glLightfv(GL_LIGHT1, GL_SPECULAR, lightColor);
+
+        glPopMatrix(); // Restaura a matriz original
+    } else {
+        glDisable(GL_LIGHT1);
+    }
+}
+
+
+void lightOf(int value){
+    shotLight = false;
+}
 
 void movePlayer(){
         if(gameOver) return;
@@ -33,6 +58,7 @@ void movePlayer(){
             newPos.x += playerDir.x * PLAYER_SPEED;
             newPos.z += playerDir.z * PLAYER_SPEED;
             if (!checkCollision(newPos)) playerPos = newPos;
+            
         } 
         if (keyPressed['s'] || keyPressed['S']) {
             Vetor3D newPos = playerPos;
@@ -82,7 +108,10 @@ void movePlayer(){
         
         if (keyPressed[' ']) { 
             keyPressed[' '] = false;
+            shotLight = true;
+            glutTimerFunc(100, lightOf, 0);
             shoot();
+
         }
 
 }

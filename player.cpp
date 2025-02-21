@@ -25,10 +25,7 @@ void setupShotLight() {
     if (shotLight) {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_LIGHT1);
-
-        glPushMatrix(); // Salva a matriz atual
-        glLoadIdentity(); // Reseta a matriz para evitar transformações indesejadas
-
+        
         GLfloat lightPos[] = { playerPos.x, playerPos.y + 0.5f, playerPos.z, 1.0f };
 
         GLfloat lightColor[] = { 0.5f, 0.5f, 0.35f, 1.0f };
@@ -36,7 +33,6 @@ void setupShotLight() {
         glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColor);
         glLightfv(GL_LIGHT1, GL_SPECULAR, lightColor);
 
-        glPopMatrix(); // Restaura a matriz original
     } else {
         glDisable(GL_LIGHT1);
     }

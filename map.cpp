@@ -5,22 +5,20 @@
 const int ROOM_SIZE = 30;
 
 void setupLighting() {
-    // Luz ambiente global bem escura
-    GLfloat globalAmbient[] = {0.2f, 0.2f, 0.2f, 1.0f}; 
+    GLfloat globalAmbient[] = {0.2f, 0.2f, 0.2f, 1.0f};
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
 
-    // Configuração da fonte de luz pontual
-    GLfloat lightPosition[] = {ROOM_SIZE / 2, ROOM_SIZE, ROOM_SIZE / 2, 1.0f}; // Posição da luz
-    GLfloat lightDiffuse[] = {0.5f, 0.5f, 0.5f, 1.0f}; // Cor difusa da luz (mais fraca)
-    GLfloat lightSpecular[] = {0.1f, 0.1f, 0.1f, 1.0f}; // Cor especular da luz (muito fraca)
+    GLfloat lightPosition[] = {ROOM_SIZE / 2, ROOM_SIZE, ROOM_SIZE / 2, 1.0f}; 
+    GLfloat lightDiffuse[] = {0.5f, 0.5f, 0.5f, 1.0f}; 
+    GLfloat lightSpecular[] = {0.1f, 0.1f, 0.1f, 1.0f}; 
 
     glEnable(GL_LIGHT0);
-
-    // Define a posição e as propriedades da luz
     glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
     glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpecular);
+
 }
+
 
 void drawRoom() {
     setupLighting();

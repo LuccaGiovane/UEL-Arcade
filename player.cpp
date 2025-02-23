@@ -4,6 +4,9 @@
 #include <GL/glut.h>
 #include <cmath>
 #include <iostream>
+#include <windows.h>
+#include <mmsystem.h>
+
 
 extern void resetGame();
 
@@ -105,6 +108,7 @@ void movePlayer(){
         if (keyPressed[' ']) { 
             keyPressed[' '] = false;
             shotLight = true;
+            PlaySound("shot.wav", NULL, SND_FILENAME | SND_ASYNC);
             glutTimerFunc(100, lightOf, 0);
             shoot();
 

@@ -8,31 +8,44 @@
 
 
 
-// Função display: se o jogo acabou exibe a tela de game over; caso contrário, desenha a cena
+/*
+    Função display: 
+    - se o jogo acabou exibe a tela de game over; 
+    - caso contrário, desenha a cena
+*/
 void display() {
     if (gameOver) {
         drawGameOverScreen();
     } else {
+        // limpa os buffers e reseta a matriz de modelo/visao
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glLoadIdentity();
         
         // Atualiza câmera seguindo o jogador
+        //(posicao da camera, onde a camera esta 'olhando', vetor 'up')
         gluLookAt(playerPos.x, playerPos.y + 0.5f, playerPos.z,
                   playerPos.x + playerDir.x, playerPos.y + 0.5f + playerDir.y, playerPos.z + playerDir.z,
                   0, 1, 0);
         
-        glEnable(GL_LIGHTING);  // Habilita iluminação
-        setupShotLight();       // Configura a luz do tiro na posição correta
+        // iluminaçao e renderizaçao de cenario/objetos
+        glEnable(GL_LIGHTING);
+        setupShotLight();    // luz do tiro
         drawRoom();
-        glDisable(GL_LIGHTING); // Desabilita iluminação para o restante da cena
+        glDisable(GL_LIGHTING);
         drawMonsters();
         drawCrosshair();
         drawHUD();
     }
+
     glutSwapBuffers();
 }
 
-// Função para reiniciar o jogo: reseta variáveis do jogador e limpa os inimigos
+
+/*
+    Função resetGame:
+    reinicia as variaveis do jogador
+    reseta o vetor de inimigos
+*/
 void resetGame() {
     playerHP = 100;
     playerScore = 0;
@@ -43,39 +56,49 @@ void resetGame() {
     glutTimerFunc(3000, spawnMonster, 0);
 }
 
-// Função update (mínima, já que update() do player.cpp também é registrada)
+
+/*
+    Função updateScene:
+    - glutPostRedisplay() sinaliz que a tela deve ser redesenhada
+    - chama a cada 16ms pra atualizar o frame de forma continua
+*/
 void updateScene(int value) {
     glutPostRedisplay();
-    glutTimerFunc(16, updateScene, 0);
+    glutTimerFunc(16, updateScene, 0); 
 }
 
+
 int main(int argc, char** argv) {
+
     srand(time(NULL));
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(800, 600);
     glutCreateWindow("Pew-Pew");
     
-    glEnable(GL_DEPTH_TEST);
-    glMatrixMode(GL_PROJECTION);
+    // configurações do 3d
+    glEnable(GL_DEPTH_TEST);       // teste de profundidade para renderização 3D
+    glMatrixMode(GL_PROJECTION);   // configura a matriz de projeção para definir a perspectiva 3D
     gluPerspective(60, 800.0 / 600.0, 0.1, 100.0);
     glMatrixMode(GL_MODELVIEW);
     
     resetGame();
     
+    // inicializa o array das teclas
     for (int i = 0; i < 256; i++) keyPressed[i]=false;
 
-    glutDisplayFunc(display);
-    glutKeyboardFunc(keyboard);
-    glutKeyboardUpFunc(keyboardUp);
+    // callbacks para renderização e entrada do usuário
+    glutDisplayFunc(display);       // janela precisa ser redesenhada
+    glutKeyboardFunc(keyboard);     // teclas pressionadas
+    glutKeyboardUpFunc(keyboardUp); // teclas liberadas
     
     
-    // Registra os timers para atualização do jogador, inimigos e cena
-    glutTimerFunc(16, update, 0);             // update() definida em player.cpp
-    glutTimerFunc(16, updateMonsters, 0);       // updateMonsters() de enemy.cpp
-    // glutTimerFunc(3000, spawnMonster, 0);       // spawnMonster() de enemy.cpp
-    glutTimerFunc(16, updateScene, 0);          // Apenas para chamar glutPostRedisplay
+    // registra os timers para atualização do jogo
+    glutTimerFunc(16, update, 0);             // Atualiza o estado do jogador (player.cpp)
+    glutTimerFunc(16, updateMonsters, 0);     // tualiza o estado dos inimigos (enemy.cpp)
+    glutTimerFunc(16, updateScene, 0);        // chama glutPostRedisplay pra redesenhar a cena
     
+    // esconde o cursor e trava ele no centro da tela
     glutSetCursor(GLUT_CURSOR_NONE);
     glutWarpPointer(400, 300);
     

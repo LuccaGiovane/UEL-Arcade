@@ -1,10 +1,8 @@
 CC      = g++
 CFLAGS  = -Wall -O2
-LDFLAGS = -lfreeglut -lglu32 -lopengl32
+LDFLAGS = -lfreeglut -lglu32 -lopengl32 -lwinmm
 TARGET  = pewpew.exe
 SOURCES = enemy.cpp player.cpp map.cpp menu.cpp main.cpp
-
-#all: $(TARGET)
 
 $(TARGET): $(SOURCES)
 	$(CC) $(CFLAGS) $(SOURCES) -o $(TARGET) $(LDFLAGS)

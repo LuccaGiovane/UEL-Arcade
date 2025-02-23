@@ -5,13 +5,10 @@
 #include <cmath>
 #include <stdlib.h>
 #include <iostream>
-<<<<<<< HEAD
 #include <windows.h>
 #include <mmsystem.h>
 
-=======
 #include <random>
->>>>>>> a9858965c83eeb8326114f6b84129e39514d1919
 
 extern void resetGame();
 

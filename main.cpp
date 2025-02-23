@@ -7,7 +7,6 @@
 #include "menu.h"
 
 
-
 /*
     Função display: 
     - se o jogo acabou exibe a tela de game over; 
@@ -92,18 +91,12 @@ int main(int argc, char** argv) {
     glutKeyboardFunc(keyboard);     // teclas pressionadas
     glutKeyboardUpFunc(keyboardUp); // teclas liberadas
     
-    
-<<<<<<< HEAD
+
     // registra os timers para atualização do jogo
     glutTimerFunc(16, update, 0);             // Atualiza o estado do jogador (player.cpp)
     glutTimerFunc(16, updateMonsters, 0);     // tualiza o estado dos inimigos (enemy.cpp)
     glutTimerFunc(16, updateScene, 0);        // chama glutPostRedisplay pra redesenhar a cena
-=======
-    // Registra os timers para atualização do jogador, inimigos e cena
-    glutTimerFunc(16, update, 0);             // update() definida em player.cpp
-    glutTimerFunc(16, updateMonsters, 0);       // updateMonsters() de enemy.cpp
-    glutTimerFunc(16, updateScene, 0);          // Apenas para chamar glutPostRedisplay
->>>>>>> a9858965c83eeb8326114f6b84129e39514d1919
+
     
     // esconde o cursor e trava ele no centro da tela
     glutSetCursor(GLUT_CURSOR_NONE);

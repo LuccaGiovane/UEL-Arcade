@@ -2,9 +2,9 @@
 #define ENEMY_H
 
 #include <vector>
-#include "menu.h"    // Para a definição de Vetor e funções de vetor
-#include "player.h"  // Para acesso às variáveis do jogador (playerPos, playerHP, etc.)
-#include "map.h"     // Para ROOM_SIZE e checkCollision
+#include "menu.h"    
+#include "player.h" 
+#include "map.h"     
 
 // Estrutura que representa um inimigo (monstro)
 struct Monster {

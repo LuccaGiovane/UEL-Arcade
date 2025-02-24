@@ -12,9 +12,9 @@ extern Vetor3D playerDir;
 extern bool keyPressed[256];
 
 // Funções relacionadas ao jogador
-void keyboard(unsigned char key, int x, int y);
-void keyboardUp(unsigned char key, int x, int y);
+void keyboard(unsigned char key, int x, int y);     // callback p/ quando pressionar tecla
+void keyboardUp(unsigned char key, int x, int y);   // callback p/ quando liberar tecla
 void update(int value);
-void setupShotLight();
+void setupShotLight();                              // luz do tiro
 
 #endif

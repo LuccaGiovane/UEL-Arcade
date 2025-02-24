@@ -5,7 +5,6 @@
 #include "player.h"
 #include "map.h"
 
-// ========== VARIÁVEIS GLOBAIS E CONSTANTES ==========
 
 // Vetor de inimigos
 std::vector<Monster> monsters;
@@ -19,15 +18,22 @@ const int MONSTER_STRONG = 2;
 static const float SHOOT_RANGE = 10.0f;
 static const float ANGLE_TOLERANCE = 0.1f;
 
+
+/*
+    Função drawMonsters:
+    - Percorre a lista de inimigos e, para cada inimigo ativo, desenha-o na tela.
+    - Cada inimigo é desenhado como uma esfera, com cor definida pelo seu tipo:
+      vermelho para básico, verde para rápido e azul para forte.
+*/
 void drawMonsters() {
 
     for (auto &m : monsters) {
         
         if (!m.active) continue;
             
-        // salva o estado atual da matriz de transf pq se nao afetava os outros
         glPushMatrix();
-        // move a coordenada pra onde o monstro esta, 0.5 pra ele nao ficar no chao
+
+        // move para a posição do monstro 0.5 na altura para que não ficar no chã
         glTranslatef(m.position.x, 0.5f, m.position.z);
         
         // define a cor dependendo do monstro respectivamente: vermelho, verde, azul
@@ -41,11 +47,19 @@ void drawMonsters() {
         // desenha a esfera
         glutSolidSphere(0.3, 10, 10);
 
-        // restaura a matriz de transf
+        
         glPopMatrix();
     }
 }
 
+
+/*
+    Função updateMonsters:
+    - Atualiza a posição e o comportamento dos inimigos periodicamente.
+    - Cada inimigo ativo move-se na direção do jogador.
+    - Se ocorrer uma colisão com o ambiente (checkCollision), o movimento é revertido.
+    - Se um inimigo colidir com o jogador (distância < 0.5) ele da o dano e desativa
+*/
 void updateMonsters(int value) {
 
     if (gameOver) {
@@ -95,6 +109,14 @@ void updateMonsters(int value) {
     glutTimerFunc(16, updateMonsters, 0);
 }
 
+
+/*
+    Função spawnMonster:
+    - Cria um novo inimigo em uma posição aleatória dentro da sala.
+    - Define seu tipo aleatoriamente (básico, rápido ou forte) e ajusta sua vida de acordo.
+    - Adiciona o novo inimigo ao vetor global de inimigos.
+    - Reagenda a criação de inimigos a cada 3000 ms.
+*/
 void spawnMonster(int value) {
     Monster m;
     m.position = Vetor3D(rand() % ROOM_SIZE, 0, rand() % ROOM_SIZE);
@@ -112,6 +134,17 @@ void spawnMonster(int value) {
     glutTimerFunc(3000, spawnMonster, 0);
 }
 
+
+/*
+    Função shoot:
+    - Processa o disparo do jogador.
+    - Percorre todos os inimigos ativos e, para cada um:
+        - Calcula a distância até o jogador.
+        - Verifica se o inimigo está dentro do alcance do tiro (SHOOT_RANGE).
+        - Usa o produto escalar (dotProduct) para determinar se o inimigo está alinhado com a mira do jogador.
+    - Se o inimigo estiver no campo de tiro, diminui sua vida.
+    - Se a vida do inimigo chegar a zero ou menos, o inimigo é desativado e a pontuação do jogador é incrementada conforme o tipo.
+*/
 void shoot() {
     for (auto &m : monsters) {
         if (!m.active) continue;
@@ -121,11 +154,11 @@ void shoot() {
                         m.position.y - playerPos.y,
                         m.position.z - playerPos.z);
         
+        // se o tiro nao der range do monstro so ignora
         float distance = vectorLength(toEnemy);
-        
         if (distance > SHOOT_RANGE) continue;
         
-        
+
         Vetor3D normToEnemy = normalize(toEnemy);
         if (dotProduct(playerDir, normToEnemy) > std::cos(ANGLE_TOLERANCE)) {
             m.health--;

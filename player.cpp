@@ -1,13 +1,10 @@
 #include "player.h"
 #include "map.h"
 #include "enemy.h"
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <cmath>
 #include <stdlib.h>
 #include <iostream>
-#include <windows.h>
-#include <mmsystem.h>
-#include <random>
 
 extern void resetGame();
 const float PLAYER_SPEED = 0.05f;
@@ -28,22 +25,16 @@ bool shotLight = false;
 */
 void setupShotLight() {
     if (shotLight) {
-
         glEnable(GL_LIGHT1);
         
         GLfloat lightPos[] = { playerPos.x, playerPos.y+0.5f, playerPos.z, 1.0f };
-
         GLfloat lightYellow[] = {0.1f, 0.1f, 0.1f, 1.0f};
-        GLfloat black[] = {0.0f, 0.0f, 0.0f, 1.0f};
 
         glLightfv(GL_LIGHT1, GL_POSITION, lightPos);
-        glLightfv(GL_LIGHT1,GL_AMBIENT,black);        // brilho da cena - preto nao contribui para a iluminacao
-        glLightfv(GL_LIGHT1,GL_DIFFUSE,lightYellow);  // cor de fonte de luz
-        glLightfv(GL_LIGHT1,GL_SPECULAR,lightYellow); // brilhante ou opac
+        glLightfv(GL_LIGHT1, GL_DIFFUSE, lightYellow);
 
-    } else {
+    } else 
         glDisable(GL_LIGHT1);
-    }
 }
 
 
@@ -125,7 +116,6 @@ void movePlayer(){
         if (keyPressed[' ']) { 
             keyPressed[' '] = false;
             shotLight = true;
-            PlaySound("shot.wav", NULL, SND_FILENAME | SND_ASYNC);
             glutTimerFunc(100, lightOf, 0);
             shoot();
 

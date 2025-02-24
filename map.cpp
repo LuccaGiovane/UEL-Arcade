@@ -1,8 +1,9 @@
 #include "map.h"
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 
 // Tamanho da sala
 const int ROOM_SIZE = 30;
+const int WALL_SIZE = 10;
 
 
 /*
@@ -11,21 +12,17 @@ const int ROOM_SIZE = 30;
     - Define a luz ambiente e a posição/difusão para iluminar a sala.
 */
 void setupLighting() {
-    // define a luz ambiente global
-    GLfloat globalAmbient[] = {0.2f, 0.2f, 0.2f, 1.0f};
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
-
     // define a posição e características da luz principal
-    GLfloat lightPosition[] = {ROOM_SIZE / 2, ROOM_SIZE, ROOM_SIZE / 2, 1.0f}; 
-    GLfloat lightDiffuse[] = {0.5f, 0.5f, 0.5f, 1.0f}; 
-    GLfloat lightSpecular[] = {0.1f, 0.1f, 0.1f, 1.0f}; // especular fraquinha 
+    GLfloat lightPosition[] = {ROOM_SIZE / 2, WALL_SIZE-1.0f, ROOM_SIZE / 2, 1.0f};
+    GLfloat lightAmbient[] = {0.1f, 0.1f, 0.1f, 1.0f};
+    GLfloat lightDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
 
-    // habilita a posição da luz e suas caracteristicas
+    // habilita a luz
     glEnable(GL_LIGHT0);
-    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);   // centralizada no meio da sala
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);     // luz difusa
-    glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpecular);   // especular para dar eff de "brilho" nas superficies
-
+    
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
 }
 
 
@@ -36,54 +33,65 @@ void setupLighting() {
 */
 void drawRoom() {
     setupLighting();
-
     // Chão
-    glColor3f(0.2f, 0.2f, 0.2f);
+    glColor3f(0.3f, 0.3f, 0.3f);
     glBegin(GL_QUADS);
-        glVertex3f(0, 0, 0);
-        glVertex3f(ROOM_SIZE, 0, 0);
+        glNormal3f(0.0f, 1.0f, 0.0f); // Normal para o chão
+        glVertex3f(0.0f, 0, 0.0f);
+        glVertex3f(ROOM_SIZE, 0, 0.0f);
         glVertex3f(ROOM_SIZE, 0, ROOM_SIZE);
-        glVertex3f(0, 0, ROOM_SIZE);
+        glVertex3f(0.0f, 0, ROOM_SIZE);
     glEnd();
 
+    // Teto
+    glColor3f(0.2f, 0.2f, 0.6f);
+    glBegin(GL_QUADS);
+        glNormal3f(0.0f, -1.0f, 0.0f); // Normal para o teto
+        glVertex3f(0.0f, WALL_SIZE, 0.0f);
+        glVertex3f(ROOM_SIZE, WALL_SIZE, 0.0f);
+        glVertex3f(ROOM_SIZE, WALL_SIZE, ROOM_SIZE);
+        glVertex3f(0.0f, WALL_SIZE, ROOM_SIZE);
+    glEnd();
 
     // Parede frontal (z = 0)
     glColor3f(0.6f, 0.6f, 0.6f);
     glBegin(GL_QUADS);
-        glVertex3f(0, 0, 0);
-        glVertex3f(ROOM_SIZE, 0, 0);
-        glVertex3f(ROOM_SIZE, ROOM_SIZE, 0);
-        glVertex3f(0, ROOM_SIZE, 0);
+        glNormal3f(0.0f, -1.0f, 1.0f); // Normal para a parede frontal
+        glVertex3f(0.0f, 0, 0.0f);
+        glVertex3f(ROOM_SIZE, 0, 0.0f);
+        glVertex3f(ROOM_SIZE, WALL_SIZE, 0.0f);
+        glVertex3f(0.0f, WALL_SIZE, 0.0f);
     glEnd();
 
     // Parede traseira (z = ROOM_SIZE)
     glColor3f(0.6f, 0.6f, 0.6f);
     glBegin(GL_QUADS);
-        glVertex3f(0, 0, ROOM_SIZE);
+        glNormal3f(0.0f, -1.0f, -1); // Normal para a parede traseira
+        glVertex3f(0.0f, 0, ROOM_SIZE);
         glVertex3f(ROOM_SIZE, 0, ROOM_SIZE);
-        glVertex3f(ROOM_SIZE, ROOM_SIZE, ROOM_SIZE);
-        glVertex3f(0, ROOM_SIZE, ROOM_SIZE);
+        glVertex3f(ROOM_SIZE, WALL_SIZE, ROOM_SIZE);
+        glVertex3f(0.0f, WALL_SIZE, ROOM_SIZE);
     glEnd();
 
     // Parede esquerda (x = 0)
     glColor3f(0.6f, 0.6f, 0.6f);
     glBegin(GL_QUADS);
-        glVertex3f(0, 0, 0);
-        glVertex3f(0, 0, ROOM_SIZE);
-        glVertex3f(0, ROOM_SIZE, ROOM_SIZE);
-        glVertex3f(0, ROOM_SIZE, 0);
+        glNormal3f(1.0f, -1.0f, 0.0f);
+        glVertex3f(0.0f, 0, 0.0f);
+        glVertex3f(0.0f, 0, ROOM_SIZE);
+        glVertex3f(0.0f, WALL_SIZE, ROOM_SIZE);
+        glVertex3f(0.0f, WALL_SIZE, 0.0f);
     glEnd();
 
     // Parede direita (x = ROOM_SIZE)
     glColor3f(0.6f, 0.6f, 0.6f);
     glBegin(GL_QUADS);
-        glVertex3f(ROOM_SIZE, 0, 0);
+        glNormal3f(-1.0f, -1.0f, 0.0f); // Normal para a parede direita
+        glVertex3f(ROOM_SIZE, 0, 0.0f);
         glVertex3f(ROOM_SIZE, 0, ROOM_SIZE);
-        glVertex3f(ROOM_SIZE, ROOM_SIZE, ROOM_SIZE);
-        glVertex3f(ROOM_SIZE, ROOM_SIZE, 0);
+        glVertex3f(ROOM_SIZE, WALL_SIZE, ROOM_SIZE);
+        glVertex3f(ROOM_SIZE, WALL_SIZE, 0.0f);
     glEnd();
-
-
 }
 
 

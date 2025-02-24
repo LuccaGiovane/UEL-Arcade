@@ -7,5 +7,6 @@ extern const int ROOM_SIZE;
 
 void drawRoom();
 bool checkCollision(const Vetor3D &pos);
+void setupLighting();
 
 #endif
